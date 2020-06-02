@@ -16,11 +16,11 @@ class ExportData {
             let dataItem = item[accessKeys[0]][accessKeys[1]];
             if (typeof dataItem == 'object') {
               value = dataItem.map(function(keyContent) {
-                let labels = []
+                let labels = [];
                 for (let [key, value] of Object.entries(keyContent)) {
                     labels.push(`${key}: ${value}`);
                 }
-                value = labels.join(' || ');
+                return labels.join(' || ');
               }).join("\n");
             } else {
               value = dataItem || '';

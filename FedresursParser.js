@@ -1,8 +1,8 @@
 class FedresursParser {
   constructor(guid) {
     this.guid = guid;
-    this.limit = 10000; // сколько записей подгружать
-    this.delay = 5000; // задержка между запросами на карточки. Нужен во избежание бана
+    this.limit = 6000; // сколько записей подгружать
+    this.delay = 4000; // задержка между запросами на карточки. Нужен во избежание бана
 
     return this;
   }
@@ -111,7 +111,7 @@ class FedresursParser {
       'content.lesseesCompanies', 
       'content.lessorsIndividualEntrepreneurs', 'content.lesseesIndividualEntrepreneurs',
        'content.lessorsPersons', 'content.lesseesPersons', 'content.lessorsNonResidentCompanies', 
-       'content.lesseesNonResidentCompanies'
+       'content.lesseesNonResidentCompanies', 'content.subjects'
     ].reduce(function(acc, cur, i) {
       acc[cur] = cur;
       return acc;
@@ -121,7 +121,7 @@ class FedresursParser {
   }
 }
 
-let parser = new FedresursParser('a3a9836b-0e83-4091-b8e3-50b656ba4a8a');
+let parser = new FedresursParser('77dfee02-6258-47c6-8a6e-059f516f8d01');
 parser.loadItems();
 
 

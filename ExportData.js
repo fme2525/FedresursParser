@@ -21,7 +21,7 @@ class ExportData {
                     labels.push(`${key}: ${value}`);
                 }
                 return labels.join(' || ');
-              }).join("\n");
+              }).join("; ");
             } else {
               value = dataItem || '';
             }

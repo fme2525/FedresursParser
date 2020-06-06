@@ -13,7 +13,8 @@ class ExportData {
           let value = '';
           if (headerKeyName.indexOf('.') > -1) {
             let accessKeys = headerKeyName.split('.');
-            let dataItem = item[accessKeys[0]][accessKeys[1]];
+            let dataItem = item[accessKeys[0]];
+            dataItem = dataItem && dataItem[accessKeys[1]] ? dataItem[accessKeys[1]] : '';
             if (typeof dataItem == 'object') {
               value = dataItem.map(function(keyContent) {
                 let labels = [];

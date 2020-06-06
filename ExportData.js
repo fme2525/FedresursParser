@@ -10,7 +10,7 @@ class ExportData {
     itemsNotFormatted.forEach((item) => {
         let row = {};
         Object.keys(this.headers).forEach(function(headerKeyName) {
-          let value = null;
+          let value = '';
           if (headerKeyName.indexOf('.') > -1) {
             let accessKeys = headerKeyName.split('.');
             let dataItem = item[accessKeys[0]][accessKeys[1]];
@@ -21,14 +21,14 @@ class ExportData {
                     labels.push(`${key}: ${value}`);
                 }
                 return labels.join(' || ');
-              }).join("; ");
+              }).join("*****");
             } else {
               value = dataItem || '';
             }
           } else {
             value = item[headerKeyName] || '';
           }
-          row[headerKeyName] = value.replace(/,/g, '');
+          row[headerKeyName] = value.replace(/,/g, ' ');
         });
 
         itemsFormatted.push(row);
@@ -37,17 +37,23 @@ class ExportData {
     this.exportCSVFile(this.headers, itemsFormatted, this.fileName);
   }
 
-  convertToCSV(objArray) {
+  convertToCSV(objArray, headers) {
       var array = typeof objArray != 'object' ? JSON.parse(objArray) : objArray;
       var str = '';
+      var headersArray = Object.keys(headers);
 
       for (var i = 0; i < array.length; i++) {
           var line = '';
-          for (var index in array[i]) {
-              if (line != '') line += ',';
-              line += array[i][index];
-          }
-          str += line + '\r\n';
+          var row = array[i];
+          headersArray.forEach(function(headerKeyName) {
+            if (line != '') line += '\t';
+            let cellValue = row[headerKeyName];
+            cellValue = cellValue.replace(/"/g, '""');
+            if (cellValue.search(/("|,|\n)/g) >= 0)
+                cellValue = '"' + cellValue + '"';
+            line += cellValue
+          });
+          str += line + '\n';
       }
 
       return str;
@@ -55,7 +61,7 @@ class ExportData {
 
   exportCSVFile(headers, items, fileTitle) {
       if (headers) {
-          items.unshift(headers);
+          items.unshift(Object.keys(headers));
       }
 
       var jsonObject = JSON.stringify(items);

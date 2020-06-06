@@ -47,7 +47,8 @@ class ExportData {
           var row = array[i];
           headersArray.forEach(function(headerKeyName) {
             if (line != '') line += '\t';
-            let cellValue = row[headerKeyName];
+
+            let cellValue = row[headerKeyName] || '';
             cellValue = cellValue.replace(/"/g, '""');
             if (cellValue.search(/("|,|\n)/g) >= 0)
                 cellValue = '"' + cellValue + '"';
@@ -65,7 +66,7 @@ class ExportData {
       }
 
       var jsonObject = JSON.stringify(items);
-      var csv = this.convertToCSV(jsonObject);
+      var csv = this.convertToCSV(jsonObject, headers);
       var exportedFilenmae = fileTitle + '.csv' || 'export.csv';
 
       var blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });

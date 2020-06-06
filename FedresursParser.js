@@ -1,7 +1,7 @@
 class FedresursParser {
   constructor(guid) {
     this.guid = guid;
-    this.limit = 6000; // сколько записей подгружать
+    this.limit = 5000; // сколько записей подгружать
     this.delay = 4000; // задержка между запросами на карточки. Нужен во избежание бана
 
     return this;
@@ -44,17 +44,9 @@ class FedresursParser {
     request.setRequestHeader('Accept', "application/json, text/plain, */*");
     request.onload = function() {
       let content = JSON.parse(this.response)['pageData'];
+      self.content = content;
       self.totalRecords = content.length;
-      content.forEach((element, i) => {
-        if (self.stop === true) { 
-          console.error('Что-то пошло не так. Загрузка остановлена'); 
-          return; 
-        }
-        setTimeout(() => {
-          self.loadDetails(element.guid);
-        }, i * self.delay);
-      });
-
+      self.loadDetails();
       console.warn(`Записей для загрузки: ${content.length}`);
     };
 
@@ -66,8 +58,8 @@ class FedresursParser {
   }
 
   // @method Подгружаем детали записи для сохранения
-  loadDetails(guid) {
-    if (this.stop) { 
+  loadDetails() {
+    if (this.stop || this.isFinished()) { 
       this.processedRecords += 1;
       if (this.isFinished()) {
         this.exportToCSV();
@@ -75,7 +67,7 @@ class FedresursParser {
 
       return; 
     }
-
+    let guid = this.content[this.processedRecords].guid;
     let self = this;
     var request = new XMLHttpRequest();
     request.open('GET', `https://fedresurs.ru/backend/sfactmessages/${guid}`);
@@ -89,6 +81,8 @@ class FedresursParser {
         console.warn(`Получена ${self.processedRecords} запись`);
         if (self.isFinished()) {
           self.exportToCSV();
+        } else {
+          self.loadDetails();
         }
       } else {
         self.stop = true;
@@ -121,7 +115,7 @@ class FedresursParser {
   }
 }
 
-let parser = new FedresursParser('a04ea2eb-298c-4882-af1b-ad9b8f4d5ca4');
+let parser = new FedresursParser('bf9f0e1c-84a1-48e6-a400-04743df76ad7');
 parser.loadItems();
 
 

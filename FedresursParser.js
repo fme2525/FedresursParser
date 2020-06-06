@@ -2,7 +2,7 @@ class FedresursParser {
   constructor(guid) {
     this.guid = guid;
     this.limit = 5000; // сколько записей подгружать
-    this.delay = 4000; // задержка между запросами на карточки. Нужен во избежание бана
+    this.delay = 2000; // задержка между запросами на карточки. Нужен во избежание бана
 
     return this;
   }
@@ -81,11 +81,16 @@ class FedresursParser {
         console.warn(`Получена ${self.processedRecords} запись`);
         if (self.isFinished()) {
           self.exportToCSV();
-        } else {
-          self.loadDetails();
+          return true;
         }
+        
+        setTimeout(() => {
+           self.loadDetails();
+         }, self.delay);
       } else {
         self.stop = true;
+        console.error(`Доигрались ${this}`);
+        return;
       }
     };
 

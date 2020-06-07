@@ -74,9 +74,11 @@ class FedresursParser {
     request.setRequestHeader('Content-Type', "application/json");
     request.setRequestHeader('Accept', "application/json, text/plain, */*");
     request.onload = function() {
-      if (this.status >= 200 && this.status < 400) {
-        let element = JSON.parse(this.response);
-        self.tableOfContents.push(element);
+      if (this.status === 404 || (this.status >= 200 && this.status < 400)) {
+        if (this.status !== 404) {
+          let element = JSON.parse(this.response);
+          self.tableOfContents.push(element);
+        }
         self.processedRecords += 1;
         console.warn(`Получена ${self.processedRecords} запись`);
         if (self.isFinished()) {

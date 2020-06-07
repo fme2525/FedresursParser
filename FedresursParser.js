@@ -1,7 +1,7 @@
 class FedresursParser {
   constructor(guid) {
     this.guid = guid;
-    this.limit = 5000; // сколько записей подгружать
+    this.limit = 15000; // сколько записей подгружать
     this.delay = 2000; // задержка между запросами на карточки. Нужен во избежание бана
 
     return this;
@@ -120,7 +120,7 @@ class FedresursParser {
   }
 }
 
-let parser = new FedresursParser('a04ea2eb-298c-4882-af1b-ad9b8f4d5ca4S');
+let parser = new FedresursParser('4bacfb8a-7f41-49ea-9756-80e85c9998f5');
 parser.loadItems();
 
 

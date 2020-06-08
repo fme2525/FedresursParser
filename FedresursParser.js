@@ -1,7 +1,7 @@
 class FedresursParser {
   constructor(guid) {
     this.guid = guid;
-    this.limit = 15000; // сколько записей подгружать
+    this.limit = 90000; // сколько записей подгружать
     this.delay = 2000; // задержка между запросами на карточки. Нужен во избежание бана
 
     return this;
@@ -54,7 +54,7 @@ class FedresursParser {
   }
 
   isFinished(){
-    return this.totalRecords == this.processedRecords;
+    return this.content.length === 0;
   }
 
   // @method Подгружаем детали записи для сохранения
@@ -67,7 +67,7 @@ class FedresursParser {
 
       return; 
     }
-    let guid = this.content[this.processedRecords].guid;
+    let guid = this.content.pop().guid;
     let self = this;
     var request = new XMLHttpRequest();
     request.open('GET', `https://fedresurs.ru/backend/sfactmessages/${guid}`);
